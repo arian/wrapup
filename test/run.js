@@ -16,7 +16,12 @@ var relative = function(file){
     return path.relative(process.cwd(), file)
 }
 
+var passed = 0
+// expected number of exports.passed calls
+var expected = 10
+
 exports.passed = function(test){
+    passed++
     console.log(("✔ " + test + " test passed").green)
 }
 
@@ -38,3 +43,11 @@ require('./ast')
 require('./graph')
 require('./sourcemap')
 require('./wrup')
+
+process.on("SIGINT", function(){
+    process.exit()
+})
+process.on("exit", function(){
+    assert.equal(passed, expected, "all tests should pass")
+    exports.passed("all tests")
+})

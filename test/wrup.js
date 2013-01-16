@@ -1,17 +1,18 @@
 "use strict";
 
-var exec   = require('child_process').exec
-var assert = require('assert')
-var prime  = require('prime')
-var async  = require('async')
-var passed = require('./run').passed
+var exec    = require('child_process').exec
+var assert  = require('assert')
+var prime   = require('prime')
+var Promise = require('promise')
+var all     = require('then-all')
+var passed  = require('./run').passed
 
 var shouldExitWith = function(code){
-    return function(callback, command){
+    return function(resolver, command){
         return function(err, stdout, stderr){
             assert.equal(err && err.code || 0, code,
                 '"' + command + '" should exit with "' + code + '"')
-            callback()
+            resolver.fulfill()
         }
     }
 }
@@ -28,11 +29,11 @@ var commands = {
 var tasks = []
 
 prime.each(commands, function(test, command){
-    tasks.push(function(callback){
-        exec('./bin/wrup.js ' + command, {cwd: __dirname + '/../'}, test(callback, command))
-    })
+    tasks.push(new Promise(function(resolver){
+        exec('./bin/wrup.js ' + command, {cwd: __dirname + '/../'}, test(resolver, command))
+    }))
 })
 
-async.parallel(tasks, function(){
+all(tasks).then(function(){
     passed('wrup command line')
 })
