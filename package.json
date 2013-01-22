@@ -31,7 +31,7 @@
     "clint": "0.0.6",
     "prime": "0.0.6",
     "esprima": "1.0",
-    "escodegen": "0.0.15",
+    "uglify-js": "2.2",
     "esmangle": "0.0.9",
     "graphviz": "0.0.x",
     "mkdirp": "0.3"

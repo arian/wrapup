@@ -17,6 +17,7 @@ wrup1.on("error", function(err){
 
 wrup1.require(__dirname + '/fixtures/up').up(function(err){
     assert.ifError(err)
+    console.log("hey")
     test('up')
 })
 
